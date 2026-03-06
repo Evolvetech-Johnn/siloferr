@@ -32,3 +32,12 @@ Run tests with:
 ```bash
 npm test
 ```
+
+## Legal e Privacidade
+
+Este projeto é de propriedade exclusiva da **Siloferr Peças Agrícolas**.
+
+- **Licença:** [LICENSE](LICENSE) - Todos os direitos reservados.
+- **Política de Privacidade:** [PRIVACY.md](PRIVACY.md) - Em conformidade com a LGPD.
+
+Qualquer uso não autorizado do código-fonte é proibido.
