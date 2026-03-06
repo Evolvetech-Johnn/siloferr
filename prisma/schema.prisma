@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model for Admin and Executive roles
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  role      String   @default("ADMIN") // ADMIN | EXECUTIVE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Products/Equipment catalog
+model Product {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  category        String // EQUIPAMENTOS | SILOS | ACESSORIOS | OUTROS
+  image           String?
+  isFeatured      Boolean  @default(false)
+  priceRequestCnt Int      @default(0) // Analytics counter
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Leads and Quote Requests generated from the public site
+model QuoteRequest {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  message     String?
+  equipmentId String? // Optional relation if they asked for a specific product
+  status      String   @default("NEW") // NEW | CONTACTED | QUALIFIED | PROPOSAL_SENT | WON | LOST
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Daily/Monthly snapshots for the Executive Dashboard
+model AnalyticsSnapshot {
+  id            String   @id @default(cuid())
+  date          DateTime @unique // Usually truncated to YYYY-MM-DD
+  totalLeads    Int      @default(0)
+  openProposals Int      @default(0)
+  wonDeals      Int      @default(0)
+  createdAt     DateTime @default(now())
+}

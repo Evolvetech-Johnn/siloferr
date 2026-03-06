@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siloferr Peças Agrícolas | Clone Moderno</title>
+    <meta name="description" content="Siloferr Peças, Equipamentos e Acessórios Agrícolas - Excelência em Fabricação de Silos">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="container header-container">
+            <a href="#hero" class="logo">
+                <img src="https://siloferr.com.br/Content/img/logo.png" alt="Siloferr Logo">
+            </a>
+            
+            <button class="mobile-nav-toggle" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="navbar" class="navbar">
+                <ul class="nav-menu">
+                    <li><a href="#hero" class="nav-link active">Home</a></li>
+                    <li><a href="#about" class="nav-link">Sobre a Siloferr</a></li>
+                    <li><a href="#services" class="nav-link">Serviços</a></li>
+                    <li><a href="#products" class="nav-link">Produtos</a></li>
+                    <li><a href="#contact" class="nav-link">Contatos</a></li>
+                    <li><a href="https://api.whatsapp.com/send?phone=5543988032859" target="_blank" class="nav-link btn-quote">Solicitar Cotação</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-item active" style="background-image: url('https://siloferr.com.br/Content/img/intro-carousel/1.jpg');">
+                <div class="carousel-overlay"></div>
+                <div class="container carousel-content">
+                    <h2 class="animate-up">Excelência em Fabricação de Silos Agrícolas</h2>
+                    <p class="animate-up delay-1">Soluções completas para armazenamento e transporte de grãos.</p>
+                    <a href="https://api.whatsapp.com/send?phone=5543988032859" target="_blank" class="btn btn-primary animate-up delay-2">
+                        <i class="fab fa-whatsapp"></i> Solicitar um Orçamento
+                    </a>
+                </div>
+            </div>
+            
+            <div class="carousel-item" style="background-image: url('https://siloferr.com.br/Content/img/intro-carousel/4.jpg');">
+                <div class="carousel-overlay"></div>
+                <div class="container carousel-content">
+                    <h2>Pagamento Facilitado via Boleto<br>Garantia Exclusiva de 1 Ano</h2>
+                    <a href="#about" class="btn btn-outline">Conheça Nossa Empresa</a>
+                </div>
+            </div>
+        </div>
+        
+        <button class="carousel-control prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-control next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+        
+        <div class="carousel-indicators" id="carouselIndicators"></div>
+    </section>
+
+    <main id="main">
+        <!-- About Section -->
+        <section id="about" class="about section-bg">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Sobre a Siloferr</h2>
+                    <p>A Siloferr é uma empresa Paranaense situada em Cambé-PR com mais de 15 anos de experiência na construção de silos, fornecendo suporte, equipamentos e acessorios para toda cadeia do agronegócio.</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card glass-card">
+                        <div class="card-img-wrapper">
+                            <img src="https://siloferr.com.br/Content/img/folder.png" alt="Equipamentos">
+                            <div class="icon-blob"><i class="fas fa-tachometer-alt"></i></div>
+                        </div>
+                        <h3>Equipamentos</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Elevador de Canecas</li>
+                            <li><i class="fas fa-check"></i> Silos planos e elevados</li>
+                            <li><i class="fas fa-check"></i> Secador de Grãos</li>
+                            <li><i class="fas fa-check"></i> Roscas e Fitas transportadoras</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card glass-card highlight-card">
+                        <div class="card-img-wrapper">
+                            <img src="https://siloferr.com.br/Content/img/folder2.png" alt="Correias e Canecas">
+                            <div class="icon-blob"><i class="fas fa-list-ul"></i></div>
+                        </div>
+                        <h3>Correias e Canecas</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Correias elevadoras 04 a 08 lonas</li>
+                            <li><i class="fas fa-check"></i> Correias taliscadas e corrugadas</li>
+                            <li><i class="fas fa-check"></i> Canecas em PEAD, Nylon e Metal</li>
+                            <li><i class="fas fa-check"></i> Correia Transportadora Completa</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card glass-card">
+                        <div class="card-img-wrapper">
+                            <img src="https://siloferr.com.br/Content/img/folder.png" alt="Acessórios">
+                            <div class="icon-blob"><i class="fas fa-cogs"></i></div>
+                        </div>
+                        <h3>Acessórios</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Tubos e Válvulas bifurcadas</li>
+                            <li><i class="fas fa-check"></i> Curvas em chapa e ferro fundido</li>
+                            <li><i class="fas fa-check"></i> Pisos perfurados p/ aeração</li>
+                            <li><i class="fas fa-check"></i> Peneiras para máquina de pré-limpeza</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Nossos Serviços</h2>
+                    <p>Soluções especializadas para garantir a eficiência do seu agronegócio e indústria</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-tools"></i></div>
+                        <h4 class="title">Instalação de Correias</h4>
+                        <p class="description">Profissionais especializados na realização de serviços de instalação e emendas de correias transportadoras e elevadoras.</p>
+                    </div>
+
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h4 class="title">Adequação Norma NR 12</h4>
+                        <p class="description">Adequamos equipamentos as exigências da norma NR 12, garantindo segurança e tranquilidade para sua operação.</p>
+                    </div>
+
+                    <div class="service-box">
+                        <div class="service-icon"><i class="fas fa-hammer"></i></div>
+                        <h4 class="title">Reforma de Silos</h4>
+                        <p class="description">Reformas e ampliações de Silos visando a otimização e aumento da capacidade de armazenamento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call To Action -->
+        <section class="cta">
+            <div class="cta-overlay"></div>
+            <div class="container text-center cta-content">
+                <h3>Soluções Inteligentes em Armazenamento</h3>
+                <p>Nossos especialistas estão prontos para tirar suas dúvidas e criar o projeto ideal para seu negócio.</p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary cta-btn">Enviar E-mail</a>
+                    <a href="https://api.whatsapp.com/send?phone=5543988032859" target="_blank" class="btn btn-whatsapp cta-btn">
+                        <i class="fab fa-whatsapp"></i> Falar no Whatsapp
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products (Portfolio) Section -->
+        <section id="products" class="portfolio section-bg">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Principais Produtos</h2>
+                </div>
+
+                <div class="portfolio-filters">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="equipamentos">Equipamentos</button>
+                    <button class="filter-btn" data-filter="silos">Silos</button>
+                    <button class="filter-btn" data-filter="acessorios">Acessórios</button>
+                </div>
+
+                <div class="portfolio-grid" id="portfolioGrid">
+                    <!-- Products will be generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Entre em Contato</h2>
+                    <p>Estamos prontos para atender você com a melhor solução em peças e equipamentos agrícolas.</p>
+                </div>
+
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <div class="info-card">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Localização</h3>
+                                <p>Rua Antonina, 21 - Cambé - PR<br>CEP 86188-570</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h3>Telefones</h3>
+                                <p><a href="tel:+554332534898">(43) 3253-4898</a></p>
+                                <p><a href="https://wa.me/5555439880328" class="whatsapp-link"><i class="fab fa-whatsapp"></i> (43) 98803-2859</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Email</h3>
+                                <p><a href="mailto:vendas1@siloferr.com.br">vendas1@siloferr.com.br</a></p>
+                                <p><a href="mailto:vendas2@siloferr.com.br">vendas2@siloferr.com.br</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-container glass-card">
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Seu Nome" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="Seu E-mail" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="subject" name="subject" class="form-control" placeholder="Assunto" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="message" id="message" rows="5" class="form-control" placeholder="Sua Mensagem" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">
+                                <span>Enviar Mensagem</span> <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-info">
+                        <a href="#hero" class="footer-logo">
+                            <img src="https://siloferr.com.br/Content/img/logo.png" alt="Siloferr Logo">
+                        </a>
+                        <p class="brand-desc">Especializada em oferecer as melhores soluções para armazenamento, transporte e beneficiamento de produtos agrícolas.</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/siloferr/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/siloferr/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Links Úteis</h4>
+                        <ul>
+                            <li><a href="#hero"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="#about"><i class="fas fa-chevron-right"></i> Sobre a Empresa</a></li>
+                            <li><a href="#services"><i class="fas fa-chevron-right"></i> Nossos Serviços</a></li>
+                            <li><a href="#products"><i class="fas fa-chevron-right"></i> Produtos</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-newsletter">
+                        <h4>Fique por dentro</h4>
+                        <p>Assine nossa newsletter para receber as últimas novidades e ofertas de equipamentos.</p>
+                        <form class="newsletter-form" action="#">
+                            <input type="email" placeholder="Seu melhor e-mail" required>
+                            <button type="submit"><i class="fas fa-envelope"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 <strong>Siloferr Peças Agrícolas</strong>. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #0056b3;
+  --color-primary-light: #3385ff;
+  --color-primary-dark: #003d82;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #d97706;
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #128c7e;
+
+  /* Neutrals */
+  --color-bg-base: #ffffff;
+  --color-bg-alt: #f3f4f6;
+  --color-text-main: #1f2937;
+  --color-text-muted: #6b7280;
+
+  /* Fonts */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-outfit);
+}
+
+/* Custom CSS Resets and Utilities */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-text-main bg-bg-base font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-primary-dark font-bold;
+  }
+}
+
+@layer components {
+  /* Layout Containers */
+  .container-custom {
+    @apply w-full max-w-7xl mx-auto px-6;
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28;
+  }
+
+  /* Glassmorphism */
+  .glass-effect {
+    @apply bg-white/90 backdrop-blur-md border border-white/50 shadow-lg;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/40 shadow-[0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply shadow-[0_15px_40px_rgba(0,86,179,0.15)] -translate-y-1;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base bg-primary text-white shadow-[0_4px_15px_rgba(0,86,179,0.3)];
+  }
+
+  .btn-primary:hover {
+    @apply bg-primary-dark shadow-[0_6px_20px_rgba(0,86,179,0.4)] -translate-y-0.5;
+  }
+
+  .btn-accent {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base bg-accent text-white shadow-[0_4px_15px_rgba(245,158,11,0.3)];
+  }
+
+  .btn-accent:hover {
+    @apply bg-accent-hover shadow-[0_6px_20px_rgba(245,158,11,0.4)] -translate-y-0.5;
+  }
+
+  .btn-whatsapp {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base bg-whatsapp text-white shadow-[0_4px_15px_rgba(37,211,102,0.3)];
+  }
+
+  .btn-whatsapp:hover {
+    @apply bg-whatsapp-hover shadow-[0_6px_20px_rgba(37,211,102,0.4)] -translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base bg-transparent border-2 border-primary text-primary;
+  }
+
+  .btn-outline:hover {
+    @apply bg-primary text-white;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
