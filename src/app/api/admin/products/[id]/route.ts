@@ -1,42 +1,50 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!product) {
-      return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Produto não encontrado" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(product);
-  } catch (error) {
-    return NextResponse.json({ error: "Erro ao buscar produto" }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { error: "Erro ao buscar produto" },
+      { status: 500 },
+    );
   }
 }
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await req.json();
     const { title, description, category, image, isFeatured } = body;
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -49,27 +57,34 @@ export async function PUT(
     return NextResponse.json(product);
   } catch (error) {
     console.error("Product Update Error:", error);
-    return NextResponse.json({ error: "Erro ao atualizar produto" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao atualizar produto" },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
+    const { id } = await params;
     await prisma.product.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Produto removido com sucesso" });
   } catch (error) {
     console.error("Product Delete Error:", error);
-    return NextResponse.json({ error: "Erro ao remover produto" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao remover produto" },
+      { status: 500 },
+    );
   }
 }

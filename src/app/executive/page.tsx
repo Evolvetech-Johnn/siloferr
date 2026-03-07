@@ -4,24 +4,28 @@ import { subDays, startOfDay, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function ExecutiveDashboard() {
   const session = await getServerSession(authOptions);
-  
-  if (!session || (session.user as any).role !== "ADMIN" && (session.user as any).role !== "EXECUTIVE") {
+
+  if (
+    !session ||
+    (session.user.role !== "ADMIN" && session.user.role !== "EXECUTIVE")
+  ) {
     redirect("/login");
   }
 
   // 1. Fetch Global Metrics (Aggregate from snapshots for performance)
   const aggregateMetrics = await prisma.analyticsSnapshot.aggregate({
-    _sum: { totalLeads: true, wonDeals: true }
+    _sum: { totalLeads: true, wonDeals: true },
   });
 
   const totalLeads = aggregateMetrics._sum.totalLeads || 0;
   const wonDeals = aggregateMetrics._sum.wonDeals || 0;
-  const leadConversionRate = totalLeads > 0 ? ((wonDeals / totalLeads) * 100).toFixed(1) : "0.0";
+  const leadConversionRate =
+    totalLeads > 0 ? ((wonDeals / totalLeads) * 100).toFixed(1) : "0.0";
 
   // 2. WoW Growth Calculation (Last 7 days vs Previous 7 days)
   const today = startOfDay(new Date());
@@ -30,71 +34,82 @@ export default async function ExecutiveDashboard() {
 
   const currentPeriod = await prisma.analyticsSnapshot.aggregate({
     where: { date: { gte: sevenDaysAgo, lt: today } },
-    _sum: { totalLeads: true }
+    _sum: { totalLeads: true },
   });
 
   const previousPeriod = await prisma.analyticsSnapshot.aggregate({
     where: { date: { gte: fourteenDaysAgo, lt: sevenDaysAgo } },
-    _sum: { totalLeads: true }
+    _sum: { totalLeads: true },
   });
 
   const currentLeadsCount = currentPeriod._sum.totalLeads || 0;
   const previousLeadsCount = previousPeriod._sum.totalLeads || 0;
-  
+
   let leadsGrowth = 0;
   if (previousLeadsCount > 0) {
-    leadsGrowth = Math.round(((currentLeadsCount - previousLeadsCount) / previousLeadsCount) * 100);
+    leadsGrowth = Math.round(
+      ((currentLeadsCount - previousLeadsCount) / previousLeadsCount) * 100,
+    );
   } else if (currentLeadsCount > 0) {
     leadsGrowth = 100;
   }
 
   // 3. Category Distribution (Joining leads with products)
   const leads = await prisma.quoteRequest.findMany({
-    select: { equipmentId: true }
+    select: { equipmentId: true },
   });
 
   const products = await prisma.product.findMany({
-    select: { id: true, category: true }
+    select: { id: true, category: true },
   });
 
   const categoryMap: Record<string, number> = {};
-  leads.forEach(lead => {
-    const product = products.find(p => p.id === lead.equipmentId);
+  leads.forEach((lead) => {
+    const product = products.find((p) => p.id === lead.equipmentId);
     const category = product?.category || "OUTROS";
     categoryMap[category] = (categoryMap[category] || 0) + 1;
   });
 
-  const categoryData = Object.entries(categoryMap).map(([name, value]) => ({ name, value }));
+  const categoryData = Object.entries(categoryMap).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   // 4. Chart Data (Last 7 days)
   const snapshots = await prisma.analyticsSnapshot.findMany({
     where: { date: { gte: sevenDaysAgo } },
-    orderBy: { date: 'asc' }
+    orderBy: { date: "asc" },
   });
 
   const chartData = Array.from({ length: 7 }, (_, i) => {
     const date = subDays(today, 6 - i);
-    const dateStr = date.toISOString().split('T')[0];
-    const snapshot = snapshots.find(s => s.date.toISOString().split('T')[0] === dateStr);
-    
+    const dateStr = date.toISOString().split("T")[0];
+    const snapshot = snapshots.find(
+      (s) => s.date.toISOString().split("T")[0] === dateStr,
+    );
+
     return {
       name: format(date, "EEE", { locale: ptBR }),
       leads: snapshot?.totalLeads || 0,
-      won: snapshot?.wonDeals || 0
+      won: snapshot?.wonDeals || 0,
     };
   });
 
   return (
     <div className="space-y-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-heading font-bold text-slate-900">Dashboard Estratégico</h1>
-        <p className="text-slate-500 mt-1">Acompanhamento de Metas e Performance de Vendas</p>
+        <h1 className="text-3xl font-heading font-bold text-slate-900">
+          Dashboard Estratégico
+        </h1>
+        <p className="text-slate-500 mt-1">
+          Acompanhamento de Metas e Performance de Vendas
+        </p>
       </div>
-      
-      <ExecutiveCharts 
-        totalLeads={totalLeads} 
-        wonDeals={wonDeals} 
-        leadConversionRate={leadConversionRate} 
+
+      <ExecutiveCharts
+        totalLeads={totalLeads}
+        wonDeals={wonDeals}
+        leadConversionRate={leadConversionRate}
         chartData={chartData}
         categoryData={categoryData}
         leadsGrowth={leadsGrowth}

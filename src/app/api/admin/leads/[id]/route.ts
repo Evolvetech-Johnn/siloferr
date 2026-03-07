@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await req.json();
     const { status } = body;
 
@@ -22,7 +23,7 @@ export async function PATCH(
     }
 
     const lead = await prisma.quoteRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     });
 

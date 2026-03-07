@@ -1,33 +1,74 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { 
-  Inbox, 
-  Phone, 
-  Mail, 
-  Building2, 
-  Calendar, 
-  CheckCircle2, 
-  Clock, 
+import {
+  Inbox,
+  Phone,
+  Mail,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Clock,
   AlertCircle,
   MoreVertical,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 
 const STATUS_OPTIONS = [
-  { value: "NEW", label: "Novo", color: "bg-blue-100 text-blue-700", icon: Clock },
-  { value: "CONTACTED", label: "Contatado", color: "bg-purple-100 text-purple-700", icon: Phone },
-  { value: "QUALIFIED", label: "Qualificado", color: "bg-indigo-100 text-indigo-700", icon: CheckCircle2 },
-  { value: "PROPOSAL_SENT", label: "Proposta Enviada", color: "bg-orange-100 text-orange-700", icon: Mail },
-  { value: "WON", label: "Vendido", color: "bg-green-100 text-green-700", icon: CheckCircle2 },
-  { value: "LOST", label: "Perdido", color: "bg-red-100 text-red-700", icon: AlertCircle },
+  {
+    value: "NEW",
+    label: "Novo",
+    color: "bg-blue-100 text-blue-700",
+    icon: Clock,
+  },
+  {
+    value: "CONTACTED",
+    label: "Contatado",
+    color: "bg-purple-100 text-purple-700",
+    icon: Phone,
+  },
+  {
+    value: "QUALIFIED",
+    label: "Qualificado",
+    color: "bg-indigo-100 text-indigo-700",
+    icon: CheckCircle2,
+  },
+  {
+    value: "PROPOSAL_SENT",
+    label: "Proposta Enviada",
+    color: "bg-orange-100 text-orange-700",
+    icon: Mail,
+  },
+  {
+    value: "WON",
+    label: "Vendido",
+    color: "bg-green-100 text-green-700",
+    icon: CheckCircle2,
+  },
+  {
+    value: "LOST",
+    label: "Perdido",
+    color: "bg-red-100 text-red-700",
+    icon: AlertCircle,
+  },
 ];
 
 export default function AdminLeadsPage() {
-  const [leads, setLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<
+    {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+      createdAt: string;
+      company?: string;
+      equipmentId?: string;
+      status: string;
+    }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
@@ -45,13 +86,6 @@ export default function AdminLeadsPage() {
   };
 
   useEffect(() => {
-    // API GET for all leads
-    const fetchInitialLeads = async () => {
-      try {
-        const res = await fetch("/api/admin/products"); // Temporary check if products works
-        // Need to create /api/admin/leads GET route too!
-      } catch (err) {}
-    };
     fetchLeads();
   }, []);
 
@@ -64,26 +98,39 @@ export default function AdminLeadsPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        setLeads(leads.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
+        setLeads(
+          leads.map((lead) =>
+            lead.id === id ? { ...lead, status: newStatus } : lead,
+          ),
+        );
         toast.success("Status atualizado com sucesso!");
       } else {
         throw new Error();
       }
-    } catch (err) {
+    } catch {
       toast.error("Erro ao atualizar status do lead.");
     } finally {
       setUpdatingId(null);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-text-muted">Carregando cotações...</div>;
+  if (loading)
+    return (
+      <div className="p-8 text-center text-text-muted">
+        Carregando cotações...
+      </div>
+    );
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary-dark">Gestão de Leads (CRM)</h1>
-          <p className="text-text-muted mt-1 text-lg">Gerencie pedidos de cotação e prospects vindos do site.</p>
+          <h1 className="text-3xl font-heading font-bold text-primary-dark">
+            Gestão de Leads (CRM)
+          </h1>
+          <p className="text-text-muted mt-1 text-lg">
+            Gerencie pedidos de cotação e prospects vindos do site.
+          </p>
         </div>
       </div>
 
@@ -107,42 +154,63 @@ export default function AdminLeadsPage() {
                       <div className="w-16 h-16 bg-bg-alt rounded-full flex items-center justify-center text-text-muted">
                         <Inbox size={32} />
                       </div>
-                      <p className="text-lg font-bold text-text-main">Nenhuma cotação encontrada</p>
+                      <p className="text-lg font-bold text-text-main">
+                        Nenhuma cotação encontrada
+                      </p>
                     </div>
                   </td>
                 </tr>
               ) : (
                 leads.map((lead) => {
-                  const statusInfo = STATUS_OPTIONS.find(s => s.value === lead.status) || STATUS_OPTIONS[0];
+                  const statusInfo =
+                    STATUS_OPTIONS.find((s) => s.value === lead.status) ||
+                    STATUS_OPTIONS[0];
                   const StatusIcon = statusInfo.icon;
 
                   return (
-                    <tr key={lead.id} className="hover:bg-blue-50/10 transition-colors group">
+                    <tr
+                      key={lead.id}
+                      className="hover:bg-blue-50/10 transition-colors group"
+                    >
                       <td className="p-6">
                         <div className="space-y-1">
-                          <p className="font-bold text-text-main">{lead.name}</p>
+                          <p className="font-bold text-text-main">
+                            {lead.name}
+                          </p>
                           <div className="flex flex-col text-sm text-text-muted gap-1">
-                            <span className="flex items-center gap-1.5"><Mail size={14} /> {lead.email}</span>
-                            <span className="flex items-center gap-1.5"><Phone size={14} /> {lead.phone}</span>
+                            <span className="flex items-center gap-1.5">
+                              <Mail size={14} /> {lead.email}
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Phone size={14} /> {lead.phone}
+                            </span>
                           </div>
                         </div>
                       </td>
                       <td className="p-6">
                         <div className="flex items-center gap-2 text-text-muted text-sm">
                           <Calendar size={14} />
-                          {format(new Date(lead.createdAt), "dd MMM, HH:mm", { locale: ptBR })}
+                          {format(new Date(lead.createdAt), "dd MMM, HH:mm", {
+                            locale: ptBR,
+                          })}
                         </div>
                       </td>
                       <td className="p-6">
                         <div className="space-y-1">
                           {lead.company && (
                             <p className="flex items-center gap-1.5 text-sm font-semibold text-text-main">
-                              <Building2 size={14} className="text-primary-light" />
+                              <Building2
+                                size={14}
+                                className="text-primary-light"
+                              />
                               {lead.company}
                             </p>
                           )}
                           <p className="text-xs text-text-muted">
-                            Ref: {lead.equipmentId ? `Produto #${lead.equipmentId.slice(-4)}` : "Geral"}
+                            Ref:{" "}
+                            {lead.equipmentId
+                              ? `Produto #${lead.equipmentId.slice(-4)}`
+                              : "Geral"}
                           </p>
                         </div>
                       </td>
@@ -151,11 +219,15 @@ export default function AdminLeadsPage() {
                           <select
                             disabled={updatingId === lead.id}
                             value={lead.status}
-                            onChange={(e) => updateStatus(lead.id, e.target.value)}
-                            className={`appearance-none pl-10 pr-10 py-2 rounded-full text-xs font-bold transition-all border-none cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-primary ${statusInfo.color} ${updatingId === lead.id ? 'opacity-50' : ''}`}
+                            onChange={(e) =>
+                              updateStatus(lead.id, e.target.value)
+                            }
+                            className={`appearance-none pl-10 pr-10 py-2 rounded-full text-xs font-bold transition-all border-none cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-primary ${statusInfo.color} ${updatingId === lead.id ? "opacity-50" : ""}`}
                           >
-                            {STATUS_OPTIONS.map(opt => (
-                              <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            {STATUS_OPTIONS.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
                             ))}
                           </select>
                           <div className="absolute left-3 top-1/2 -translate-y-1/2">

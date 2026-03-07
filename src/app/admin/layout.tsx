@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, Package, Users, LogOut } from "lucide-react";
@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/login");
   }
 
-  const userRole = (session.user as any).role;
+  const userRole = session.user.role;
   if (userRole !== "ADMIN") {
     // If executive tries to access admin, redirect to their own dashboard
     if (userRole === "EXECUTIVE") {

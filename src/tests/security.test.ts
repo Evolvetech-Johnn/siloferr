@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET } from "../app/api/admin/leads/route";
-import { NextResponse } from "next/server";
 
 // Mock NextAuth
 vi.mock("next-auth", () => ({
