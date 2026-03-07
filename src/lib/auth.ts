@@ -64,5 +64,10 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET || "default_super_secret_key_siloferr_v1",
+  secret: process.env.NEXTAUTH_SECRET,
 };
+
+if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_SECRET) {
+  throw new Error("❌ NEXTAUTH_SECRET não definido em ambiente de produção!");
+}
+
