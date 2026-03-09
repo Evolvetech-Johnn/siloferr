@@ -66,7 +66,7 @@ export default async function AdminProductsPage() {
                   >
                     <td className="p-6">
                       <div className="flex items-center gap-4">
-                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 flex-shrink-0 shadow-sm">
+                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 shrink-0 shadow-sm">
                           <Image
                             src={
                               product.image ||
