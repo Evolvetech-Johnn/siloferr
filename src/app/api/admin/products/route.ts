@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { generateSlug } from "@/lib/utils";
 
 export async function GET() {
   try {
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, description, category, image, isFeatured } = body;
+    const { title, description, category, image, isFeatured, details } = body;
 
     if (!title || !category) {
       return NextResponse.json(
@@ -34,10 +35,21 @@ export async function POST(req: Request) {
       );
     }
 
+    const baseSlug = generateSlug(title);
+    let finalSlug = baseSlug;
+    
+    // Simple collision check (could be improved with loop but unlikely to have many collisions for now)
+    const existing = await prisma.product.findUnique({ where: { slug: baseSlug } });
+    if (existing) {
+      finalSlug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
+    }
+
     const product = await prisma.product.create({
       data: {
         title,
+        slug: finalSlug,
         description,
+        details,
         category,
         image,
         isFeatured: !!isFeatured,

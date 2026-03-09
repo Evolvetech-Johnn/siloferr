@@ -1,15 +1,15 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 // User model for Admin and Executive roles
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String?
   email     String   @unique
   password  String
@@ -20,26 +20,34 @@ model User {
 
 // Products/Equipment catalog
 model Product {
-  id              String   @id @default(cuid())
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
   title           String
+  slug            String   @unique @default(cuid()) // URL friendly identifier
   description     String?
+  details         String?  // Rich text or detailed specs
   category        String // EQUIPAMENTOS | SILOS | ACESSORIOS | OUTROS
   image           String?
+  images          String?  // JSON string for multiple images
   isFeatured      Boolean  @default(false)
   priceRequestCnt Int      @default(0) // Analytics counter
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  quoteRequests   QuoteRequest[]
 }
 
 // Leads and Quote Requests generated from the public site
 model QuoteRequest {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   email       String
   phone       String?
   company     String?
   message     String?
-  equipmentId String? // Optional relation if they asked for a specific product
+  
+  equipmentId String? @db.ObjectId // Optional relation if they asked for a specific product
+  product     Product? @relation(fields: [equipmentId], references: [id])
+  
   status      String   @default("NEW") // NEW | CONTACTED | QUALIFIED | PROPOSAL_SENT | WON | LOST
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -47,7 +55,7 @@ model QuoteRequest {
 
 // Daily/Monthly snapshots for the Executive Dashboard
 model AnalyticsSnapshot {
-  id            String   @id @default(cuid())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   date          DateTime @unique // Usually truncated to YYYY-MM-DD
   totalLeads    Int      @default(0)
   openProposals Int      @default(0)

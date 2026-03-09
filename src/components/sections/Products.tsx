@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Search, ShoppingCart } from "lucide-react";
+import Link from "next/link";
+import { Search, ShoppingCart, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Types
@@ -11,6 +12,7 @@ type CategoryValue = "todos" | "EQUIPAMENTOS" | "SILOS" | "ACESSORIOS" | "OUTROS
 
 interface Product {
   id: string;
+  slug: string;
   category: string;
   title: string;
   description?: string | null;
@@ -77,9 +79,9 @@ export function Products({ initialProducts = [] }: { initialProducts?: Product[]
         </motion.div>
 
         {/* Product Grid */}
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-12">
           <AnimatePresence mode="popLayout">
-            {filteredProducts.map((product) => (
+            {filteredProducts.slice(0, 8).map((product) => (
               <motion.div
                 key={product.id}
                 layout
@@ -90,36 +92,33 @@ export function Products({ initialProducts = [] }: { initialProducts?: Product[]
                 className="group relative bg-white rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.05)] aspect-[4/3] focus-within:ring-2 focus-within:ring-primary outline-none"
                 tabIndex={0}
               >
-                <Image
-                  src={product.image || "https://siloferr.com.br/Content/img/portfolio/produto2.jpg"}
-                  alt={product.title}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                />
-                
-                {/* Overlay Component */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#003d82]/95 via-[#003d82]/40 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus-within:opacity-100">
-                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 w-full focus-within:translate-y-0">
-                    <h4 className="text-white text-xl font-heading font-bold mb-1 leading-tight line-clamp-2">
-                      {product.title}
-                    </h4>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-accent text-xs font-bold tracking-wider uppercase flex items-center gap-1.5">
-                        <Search size={12} strokeWidth={3} />
-                        {product.category}
-                      </span>
-                      <a 
-                        href={`https://api.whatsapp.com/send?phone=5543988032859&text=Olá! Gostaria de uma cotação para o equipamento: ${product.title}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-white text-primary p-2 rounded-lg hover:bg-accent hover:text-white transition-colors"
-                      >
-                        <ShoppingCart size={18} />
-                      </a>
+                <Link href={`/produtos/${product.slug}`} className="block w-full h-full relative">
+                  <Image
+                    src={product.image || "https://siloferr.com.br/Content/img/portfolio/produto2.jpg"}
+                    alt={product.title}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  />
+                  
+                  {/* Overlay Component */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#003d82]/95 via-[#003d82]/40 to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus-within:opacity-100">
+                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 w-full focus-within:translate-y-0">
+                      <h4 className="text-white text-xl font-heading font-bold mb-1 leading-tight line-clamp-2">
+                        {product.title}
+                      </h4>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-accent text-xs font-bold tracking-wider uppercase flex items-center gap-1.5">
+                          <Search size={12} strokeWidth={3} />
+                          Ver Detalhes
+                        </span>
+                        <div className="bg-white text-primary p-2 rounded-lg hover:bg-accent hover:text-white transition-colors">
+                          <ShoppingCart size={18} />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -130,6 +129,16 @@ export function Products({ initialProducts = [] }: { initialProducts?: Product[]
             Nenhum produto cadastrado nesta categoria.
           </div>
         )}
+
+        <div className="text-center">
+          <Link 
+            href="/produtos" 
+            className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-primary hover:bg-primary-dark rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/30 group"
+          >
+            Ver Catálogo Completo
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );

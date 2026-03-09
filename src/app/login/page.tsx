@@ -9,7 +9,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/admin";
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -46,9 +46,11 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-text-main mb-1">E-mail Corporativo</label>
-          <input 
-            type="email" 
+          <label className="block text-sm font-medium text-text-main mb-1">
+            E-mail Corporativo
+          </label>
+          <input
+            type="email"
             required
             disabled={loading}
             value={email}
@@ -58,9 +60,11 @@ function LoginForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-main mb-1">Senha</label>
-          <input 
-            type="password" 
+          <label className="block text-sm font-medium text-text-main mb-1">
+            Senha
+          </label>
+          <input
+            type="password"
             required
             disabled={loading}
             value={password}
@@ -69,8 +73,8 @@ function LoginForm() {
             placeholder="••••••••"
           />
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={loading}
           className="w-full btn-primary justify-center"
         >
@@ -86,12 +90,26 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-bg-alt px-4">
       <div className="max-w-md w-full glass-card p-8 rounded-2xl">
         <div className="flex justify-center mb-8">
-          <Image src="/Content/img/logo.png" alt="Siloferr Logo" width={180} height={60} className="h-12 w-auto" />
+          <Image
+            src="/logo-nobg.png"
+            alt="Siloferr Logo"
+            width={180}
+            height={60}
+            className="h-12 w-auto"
+          />
         </div>
-        
-        <h2 className="text-2xl font-heading font-bold text-center text-primary-dark mb-6">Acesso Restrito</h2>
-        
-        <Suspense fallback={<div className="text-center text-sm text-text-muted">Carregando formulário...</div>}>
+
+        <h2 className="text-2xl font-heading font-bold text-center text-primary-dark mb-6">
+          Acesso Restrito
+        </h2>
+
+        <Suspense
+          fallback={
+            <div className="text-center text-sm text-text-muted">
+              Carregando formulário...
+            </div>
+          }
+        >
           <LoginForm />
         </Suspense>
       </div>

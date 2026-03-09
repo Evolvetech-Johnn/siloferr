@@ -24,13 +24,13 @@ export default async function ExecutiveLayout({
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col hidden md:flex">
+      <aside className="w-64 bg-slate-900 text-slate-300 border-r border-slate-800 flex-col hidden md:flex">
         <div className="p-6 border-b border-slate-800 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/Content/img/logo.png"
+            src="/logo-nobg.png"
             alt="Siloferr"
-            className="h-8 w-auto brightness-0 invert"
+            className="h-8 w-auto object-contain"
           />
         </div>
         <nav className="flex-1 p-4 flex flex-col gap-2">
