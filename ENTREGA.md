@@ -13,6 +13,10 @@
 - **CI/CD Pipeline:** Configurado workflow de Integração Contínua via GitHub Actions (`.github/workflows/ci.yml`) para garantir build e lint em cada push/pull request.
 - **Prisma ORM (v6):** Configurado schema do Prisma para MongoDB, utilizando IDs nativos (`@db.ObjectId`) e removendo adaptadores desnecessários.
 
+### Integridade e Testes
+- **Suíte de Testes Executada:** 7 testes automatizados passaram com sucesso (`npm test`), cobrindo fluxos críticos de CRM, Segurança e Snapshots.
+- **Linting e Build:** Projeto aprovado sem erros de lint (`npm run lint`) e build de produção verificado.
+
 ### Funcionalidades de Negócio
 - **Catálogo de Produtos Dinâmico:**
     - Modelagem de dados para Produtos (`Product`) com suporte a slugs URL-friendly.

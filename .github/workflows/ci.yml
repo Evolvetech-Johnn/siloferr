@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-test:
@@ -15,33 +15,30 @@ jobs:
         node-version: [20.x]
 
     env:
-      DATABASE_URL: "file:./prisma/dev.db"
+      DATABASE_URL: "mongodb://127.0.0.1:27017/siloferr_ci?directConnection=true"
       NEXTAUTH_SECRET: "ci-secret-key-123"
       NEXTAUTH_URL: "http://localhost:3000"
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-    - name: Install dependencies
-      run: npm install --legacy-peer-deps
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
 
-    - name: Generate Prisma Client
-      run: npx prisma generate
+      - name: Generate Prisma Client
+        run: npx prisma generate
 
-    - name: Setup Database Schema
-      run: npx prisma db push --skip-generate
+      - name: Run Linting
+        run: npm run lint
 
-    - name: Run Linting
-      run: npm run lint
+      - name: Run Tests
+        run: npm run test
 
-    - name: Run Tests
-      run: npm run test
-
-    - name: Build Project
-      run: npm run build
+      - name: Build Project
+        run: npm run build
