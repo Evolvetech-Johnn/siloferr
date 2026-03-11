@@ -2,11 +2,16 @@ import { prisma } from "@/lib/prisma";
 import { Plus, Edit, Box, Star, Package2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import type { Product } from "@prisma/client";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const products = await prisma.product
+    .findMany({
+      orderBy: { createdAt: "desc" },
+    })
+    .catch(() => [] as Product[]);
 
   return (
     <div className="space-y-8">
