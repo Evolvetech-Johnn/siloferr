@@ -1,10 +1,35 @@
 generator client {
   provider = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EXECUTIVE
+  SUPER_ADMIN
+  SALES
+  ANALYST
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum LeadActivityType {
+  NOTE
+  STATUS_CHANGE
+  ASSIGNMENT
+  ATTACHMENT
 }
 
 // User model for Admin and Executive roles
@@ -13,9 +38,14 @@ model User {
   name      String?
   email     String   @unique
   password  String
-  role      String   @default("ADMIN") // ADMIN | EXECUTIVE
+  role      Role     @default(ADMIN)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  leadActivities LeadActivity[]
+  assignedLeads   QuoteRequest[] @relation("LeadAssignee")
+  notifications  Notification[]
+  auditLogs      AuditLog[]
 }
 
 // Products/Equipment catalog
@@ -48,9 +78,14 @@ model QuoteRequest {
   equipmentId String? @db.ObjectId // Optional relation if they asked for a specific product
   product     Product? @relation(fields: [equipmentId], references: [id])
   
-  status      String   @default("NEW") // NEW | CONTACTED | QUALIFIED | PROPOSAL_SENT | WON | LOST
+  status      LeadStatus @default(NEW)
+  assigneeId  String? @db.ObjectId
+  assignee    User? @relation("LeadAssignee", fields: [assigneeId], references: [id])
+  expectedValue Float?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  activities LeadActivity[]
 }
 
 // Daily/Monthly snapshots for the Executive Dashboard
@@ -61,4 +96,56 @@ model AnalyticsSnapshot {
   openProposals Int      @default(0)
   wonDeals      Int      @default(0)
   createdAt     DateTime @default(now())
+}
+
+model LeadActivity {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  leadId      String           @db.ObjectId
+  lead        QuoteRequest     @relation(fields: [leadId], references: [id])
+  userId      String?          @db.ObjectId
+  user        User?            @relation(fields: [userId], references: [id])
+  type        LeadActivityType
+  description String
+  createdAt   DateTime         @default(now())
+}
+
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model Goal {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  metric       String
+  targetValue  Float
+  currentValue Float    @default(0)
+  startDate    DateTime
+  endDate      DateTime
+  createdAt    DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
 }

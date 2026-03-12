@@ -41,29 +41,29 @@ export default async function AdminDashboard() {
     <div className="space-y-10">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-primary-dark">
-            Painel Operacional
+          <h1 className="text-4xl font-heading font-black text-primary tracking-tight">
+            Painel <span className="text-accent">Operacional</span>
           </h1>
-          <p className="text-text-muted mt-1">
-            Visão geral das atividades e performance do catálogo.
+          <p className="text-text-muted mt-2 font-medium">
+            Gestão de Ativos e Fluxo de Oportunidades.
           </p>
         </div>
       </div>
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="glass-card bg-white p-6 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+        <div className="glass-card p-6 border-l-4 border-l-red-500 flex flex-col justify-between group">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <p className="text-xs text-text-muted font-bold uppercase tracking-widest">
+              <p className="text-xs text-text-muted font-black uppercase tracking-[0.2em]">
                 Cotações Pendentes
               </p>
-              <h3 className="text-4xl font-black text-primary mt-1">
+              <h3 className="text-5xl font-black text-primary mt-2">
                 {newLeadsCount}
               </h3>
             </div>
-            <div className="p-3 bg-red-50 text-red-500 rounded-2xl group-hover:scale-110 transition-transform">
-              <Inbox size={24} />
+            <div className="p-4 bg-zinc-100 text-primary rounded-2xl group-hover:bg-red-500 group-hover:text-white transition-all duration-500">
+              <Inbox size={28} />
             </div>
           </div>
           <Link
@@ -74,18 +74,18 @@ export default async function AdminDashboard() {
           </Link>
         </div>
 
-        <div className="glass-card bg-white p-6 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+        <div className="glass-card p-6 border-l-4 border-l-accent flex flex-col justify-between group">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <p className="text-xs text-text-muted font-bold uppercase tracking-widest">
+              <p className="text-xs text-text-muted font-black uppercase tracking-[0.2em]">
                 Produtos Ativos
               </p>
-              <h3 className="text-4xl font-black text-primary-dark mt-1">
+              <h3 className="text-5xl font-black text-primary mt-2">
                 {totalProducts}
               </h3>
             </div>
-            <div className="p-3 bg-blue-50 text-blue-500 rounded-2xl group-hover:scale-110 transition-transform">
-              <Package size={24} />
+            <div className="p-4 bg-zinc-100 text-primary rounded-2xl group-hover:bg-accent group-hover:text-white transition-all duration-500">
+              <Package size={28} />
             </div>
           </div>
           <Link

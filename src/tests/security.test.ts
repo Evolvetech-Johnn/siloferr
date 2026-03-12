@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET } from "../app/api/admin/leads/route";
+import { GET as GET_PRODUCTS } from "../app/api/admin/products/route";
+import { GET as GET_PRODUCT } from "../app/api/admin/products/[id]/route";
 
 // Mock NextAuth
 vi.mock("next-auth", () => ({
@@ -22,6 +24,10 @@ const { prismaMock } = vi.hoisted(() => {
     prismaMock: {
       quoteRequest: {
         findMany: vi.fn(),
+      },
+      product: {
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
       },
     },
   };
@@ -72,5 +78,61 @@ describe("Admin Leads API Security", () => {
     expect(prismaMock.quoteRequest.findMany).toHaveBeenCalled();
     // In success case, route calls NextResponse.json(leads) -> init is undefined (status 200)
     expect((response as any).body).toEqual([{ id: "1" }]);
+  });
+});
+
+describe("Admin Products API Security (GET)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should return 401 if no session exists", async () => {
+    (getServerSession as any).mockResolvedValue(null);
+
+    const response = await GET_PRODUCTS();
+
+    expect((response as any).init.status).toBe(401);
+    expect(prismaMock.product.findMany).not.toHaveBeenCalled();
+  });
+
+  it("should return 401 if user is not allowed", async () => {
+    (getServerSession as any).mockResolvedValue({
+      user: { role: "EXECUTIVE" },
+    });
+
+    const response = await GET_PRODUCTS();
+
+    expect((response as any).init.status).toBe(401);
+    expect(prismaMock.product.findMany).not.toHaveBeenCalled();
+  });
+
+  it("should return products if user is ADMIN", async () => {
+    (getServerSession as any).mockResolvedValue({
+      user: { role: "ADMIN" },
+    });
+
+    prismaMock.product.findMany.mockResolvedValue([{ id: "p1" }]);
+
+    const response = await GET_PRODUCTS();
+
+    expect(prismaMock.product.findMany).toHaveBeenCalled();
+    expect((response as any).body).toEqual([{ id: "p1" }]);
+  });
+});
+
+describe("Admin Products API Security (GET by id)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should return 401 if no session exists", async () => {
+    (getServerSession as any).mockResolvedValue(null);
+
+    const response = await GET_PRODUCT({} as any, {
+      params: Promise.resolve({ id: "p1" }),
+    });
+
+    expect((response as any).init.status).toBe(401);
+    expect(prismaMock.product.findUnique).not.toHaveBeenCalled();
   });
 });

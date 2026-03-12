@@ -72,34 +72,80 @@ const PRODUCTS = [
 ];
 
 async function main() {
-  const adminEmail = "vendas@siloferr.com.br";
+  const adminEmail = "admin@siloferr.com.br";
+  const executiveEmail = "executive@siloferr.com.br";
+  const salesEmail = "sales@siloferr.com.br";
+  const defaultPassword = "Siloferr@2026";
+  const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
-  // 1. Seed Admin
-  const existingAdmin = await prisma.user.findUnique({
+  // 1. Seed/Update Admin
+  await prisma.user.upsert({
     where: { email: adminEmail },
+    update: {
+      name: "Admin Siloferr",
+      password: hashedPassword,
+      role: "ADMIN",
+    },
+    create: {
+      email: adminEmail,
+      name: "Admin Siloferr",
+      password: hashedPassword,
+      role: "ADMIN",
+    },
   });
 
-  if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash("siloferr2026", 10);
+  // 2. Seed/Update Executive
+  await prisma.user.upsert({
+    where: { email: executiveEmail },
+    update: {
+      name: "Executivo Siloferr",
+      password: hashedPassword,
+      role: "EXECUTIVE",
+    },
+    create: {
+      email: executiveEmail,
+      name: "Executivo Siloferr",
+      password: hashedPassword,
+      role: "EXECUTIVE",
+    },
+  });
 
-    await prisma.user.create({
-      data: {
-        email: adminEmail,
-        name: "Admin Siloferr",
-        password: hashedPassword,
-        role: "ADMIN",
-      },
-    });
+  // 3. Seed/Update Sales
+  await prisma.user.upsert({
+    where: { email: salesEmail },
+    update: {
+      name: "Vendas Siloferr",
+      password: hashedPassword,
+      role: "SALES",
+    },
+    create: {
+      email: salesEmail,
+      name: "Vendas Siloferr",
+      password: hashedPassword,
+      role: "SALES",
+    },
+  });
 
-    console.log("Admin user seeded successfully!");
-  } else {
-    console.log("Admin user already exists.");
-  }
+  console.log("Usuários atualizados/criados com sucesso.");
 
-  // 2. Seed Products
+  // 4. Seed Products
   console.log("Seeding products...");
 
-  for (const p of PRODUCTS) {
+  const productTemplates = [
+    ...PRODUCTS,
+    ...PRODUCTS.map((p) => ({
+      ...p,
+      title: `${p.title} - Linha Premium`,
+      isFeatured: false,
+    })),
+    ...PRODUCTS.map((p) => ({
+      ...p,
+      title: `${p.title} - Série ${p.category}`,
+      isFeatured: false,
+    })),
+  ].slice(0, 20);
+
+  for (const p of productTemplates) {
     const slug = generateSlug(p.title);
 
     const existingProduct = await prisma.product.findUnique({
@@ -117,6 +163,83 @@ async function main() {
     } else {
       console.log(`Product already exists: ${p.title}`);
     }
+  }
+
+  // 5. Seed Leads
+  console.log("Seeding leads...");
+
+  const leadStatuses = [
+    "NEW",
+    "CONTACTED",
+    "QUALIFIED",
+    "PROPOSAL_SENT",
+    "NEGOTIATION",
+    "WON",
+    "LOST",
+  ] as const;
+
+  const companies = [
+    "Fazenda Santa Clara",
+    "Agro Horizonte",
+    "Cooperativa Vale Verde",
+    "Sementes do Sul",
+    "Armazéns Pioneiros",
+    "Grãos do Cerrado",
+  ];
+
+  const products = await prisma.product
+    .findMany({ select: { id: true }, take: 20 })
+    .catch(() => []);
+
+  const now = new Date();
+  for (let i = 1; i <= 50; i++) {
+    const status = leadStatuses[i % leadStatuses.length];
+    const createdAt = new Date(now);
+    createdAt.setDate(now.getDate() - (i % 30));
+    createdAt.setHours(9 + (i % 8), (i * 7) % 60, 0, 0);
+
+    const updatedAt = new Date(createdAt);
+    updatedAt.setHours(createdAt.getHours() + 2);
+
+    await prisma.quoteRequest
+      .create({
+        data: {
+          name: `Lead ${i} Siloferr`,
+          email: `lead${i}@example.com`,
+          phone: `+55 49 9${String(10000000 + i).slice(0, 8)}`,
+          company: companies[i % companies.length],
+          message: `Solicitação de cotação #${i}`,
+          equipmentId: products.length
+            ? products[i % products.length].id
+            : null,
+          status,
+          createdAt,
+          updatedAt: status === "WON" ? updatedAt : createdAt,
+          expectedValue: 10000 + i * 250,
+        },
+      })
+      .catch(() => null);
+  }
+
+  // 6. Seed Snapshots
+  console.log("Seeding analytics snapshots...");
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(now);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() - i);
+
+    await prisma.analyticsSnapshot
+      .upsert({
+        where: { date },
+        update: {},
+        create: {
+          date,
+          totalLeads: 10 + (i % 5),
+          openProposals: 7 + (i % 4),
+          wonDeals: 2 + (i % 3),
+        },
+      })
+      .catch(() => null);
   }
 }
 

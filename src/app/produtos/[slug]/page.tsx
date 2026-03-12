@@ -5,6 +5,79 @@ import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Check, Phone, ArrowLeft, Share2 } from "lucide-react";
+import type { Product } from "@prisma/client";
+
+export const dynamic = "force-dynamic";
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const timeout = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error("timeout")), ms);
+  });
+  return Promise.race([promise, timeout]);
+}
+
+const FALLBACK_PRODUCTS: Product[] = [
+  {
+    id: "fallback-1",
+    title: "Silo Metálico para Grãos",
+    slug: "silo-metalico-para-graos",
+    description:
+      "Soluções robustas para armazenagem com alta durabilidade e performance.",
+    details: "Estrutura metálica de alta resistência, projetada para armazenagem segura.",
+    category: "SILOS",
+    image: "https://siloferr.com.br/Content/img/portfolio/produto2.jpg",
+    images: null,
+    isFeatured: true,
+    priceRequestCnt: 0,
+    createdAt: new Date("2026-01-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-01T00:00:00.000Z"),
+  },
+  {
+    id: "fallback-2",
+    title: "Transportador de Grãos",
+    slug: "transportador-de-graos",
+    description:
+      "Equipamento desenvolvido para otimizar o fluxo e reduzir perdas no processo.",
+    details: "Projetado para operação contínua, com foco em rendimento e segurança.",
+    category: "EQUIPAMENTOS",
+    image: "https://siloferr.com.br/Content/img/portfolio/produto2.jpg",
+    images: null,
+    isFeatured: false,
+    priceRequestCnt: 0,
+    createdAt: new Date("2026-01-02T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-02T00:00:00.000Z"),
+  },
+  {
+    id: "fallback-3",
+    title: "Rosca Transportadora",
+    slug: "rosca-transportadora",
+    description:
+      "Projeto confiável e de fácil manutenção para diversas aplicações no agronegócio.",
+    details: "Opção versátil, com manutenção simplificada e excelente custo-benefício.",
+    category: "EQUIPAMENTOS",
+    image: "https://siloferr.com.br/Content/img/portfolio/produto2.jpg",
+    images: null,
+    isFeatured: false,
+    priceRequestCnt: 0,
+    createdAt: new Date("2026-01-03T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-03T00:00:00.000Z"),
+  },
+  {
+    id: "fallback-4",
+    title: "Acessórios para Silo",
+    slug: "acessorios-para-silo",
+    description:
+      "Componentes e acessórios para elevar a segurança e eficiência da operação.",
+    details: "Kit de acessórios para melhorias e adequações na planta.",
+    category: "ACESSORIOS",
+    image: "https://siloferr.com.br/Content/img/portfolio/produto2.jpg",
+    images: null,
+    isFeatured: false,
+    priceRequestCnt: 0,
+    createdAt: new Date("2026-01-04T00:00:00.000Z"),
+    updatedAt: new Date("2026-01-04T00:00:00.000Z"),
+  },
+];
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -12,9 +85,14 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-  });
+  const productFromDb = await withTimeout(
+    prisma.product.findUnique({
+      where: { slug },
+    }),
+    1500,
+  ).catch(() => null);
+  const product =
+    productFromDb || FALLBACK_PRODUCTS.find((p) => p.slug === slug) || null;
 
   if (!product) return { title: "Produto não encontrado" };
 
@@ -29,22 +107,36 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-  });
+  const productFromDb = await withTimeout(
+    prisma.product.findUnique({
+      where: { slug },
+    }),
+    1500,
+  ).catch(() => null);
+  const product =
+    productFromDb || FALLBACK_PRODUCTS.find((p) => p.slug === slug) || null;
 
   if (!product) {
     notFound();
   }
 
   // Related products (same category, exclude current)
-  const relatedProducts = await prisma.product.findMany({
-    where: {
-      category: product.category,
-      NOT: { id: product.id },
-    },
-    take: 3,
-  });
+  const relatedProductsFromDb = await withTimeout(
+    prisma.product.findMany({
+      where: {
+        category: product.category,
+        NOT: { id: product.id },
+      },
+      take: 3,
+    }),
+    1500,
+  ).catch(() => [] as Product[]);
+  const relatedProducts =
+    relatedProductsFromDb.length > 0
+      ? relatedProductsFromDb
+      : FALLBACK_PRODUCTS.filter(
+          (p) => p.category === product.category && p.id !== product.id,
+        ).slice(0, 3);
 
   return (
     <>

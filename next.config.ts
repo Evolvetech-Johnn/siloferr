@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "siloferr.com.br",
       },
+      {
+        protocol: "https",
+        hostname: "www.siloferr.com.br",
+      },
     ],
   },
 };

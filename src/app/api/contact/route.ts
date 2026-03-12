@@ -37,7 +37,44 @@ export async function POST(request: Request) {
       return newLead;
     });
 
-    console.log(`Novo Lead Salvo: ${lead.id}`);
+    await prisma.analyticsEvent
+      .create({
+        data: {
+          type: "lead_created",
+          entity: "QuoteRequest",
+          entityId: lead.id,
+          metadata: { equipmentId: lead.equipmentId, company: lead.company },
+        },
+      })
+      .catch(() => null);
+
+    const recipients = await prisma.user.findMany({
+      where: { role: { in: ["ADMIN", "SUPER_ADMIN", "SALES"] } },
+      select: { id: true },
+    });
+
+    if (recipients.length > 0) {
+      await prisma.notification
+        .createMany({
+          data: recipients.map((u) => ({
+            userId: u.id,
+            title: "Novo lead",
+            message: `${lead.name} solicitou uma cotação.`,
+          })),
+        })
+        .catch(() => null);
+    }
+
+    await prisma.auditLog
+      .create({
+        data: {
+          action: "lead.create",
+          entity: "QuoteRequest",
+          entityId: lead.id,
+          metadata: { email: lead.email, equipmentId: lead.equipmentId },
+        },
+      })
+      .catch(() => null);
 
     return NextResponse.json(
       {

@@ -8,7 +8,7 @@ import Image from "next/image";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+  const callbackUrlFromParams = searchParams.get("callbackUrl");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,18 +20,24 @@ function LoginForm() {
     setLoading(true);
     setError("");
 
+    const desiredCallbackUrl =
+      callbackUrlFromParams ||
+      (email.trim().toLowerCase() === "executivo@siloferr.com.br"
+        ? "/executive"
+        : "/admin");
+
     const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
-      callbackUrl,
+      callbackUrl: desiredCallbackUrl,
     });
 
     if (res?.error) {
       setError("Credenciais inválidas. Tente novamente.");
       setLoading(false);
     } else {
-      router.push(callbackUrl);
+      router.push(desiredCallbackUrl);
       router.refresh();
     }
   };
@@ -95,6 +101,7 @@ export default function LoginPage() {
             alt="Siloferr Logo"
             width={180}
             height={60}
+            priority
             className="h-12 w-auto"
           />
         </div>

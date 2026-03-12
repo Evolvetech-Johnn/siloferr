@@ -17,6 +17,18 @@ const { prismaMock } = vi.hoisted(() => {
     product: {
       update: vi.fn(),
     },
+    analyticsEvent: {
+      create: vi.fn().mockResolvedValue({}),
+    },
+    auditLog: {
+      create: vi.fn().mockResolvedValue({}),
+    },
+    user: {
+      findMany: vi.fn(),
+    },
+    notification: {
+      createMany: vi.fn().mockResolvedValue({ count: 0 }),
+    },
     // We need to implement $transaction to call the callback with the mock itself
     // However, since we can't reference 'mock' inside its own initialization easily if we want strict typing
     // We can define it partially first or use a getter.
@@ -54,7 +66,11 @@ describe("Contact API (POST)", () => {
     prismaMock.quoteRequest.create.mockResolvedValue({
       id: "lead-1",
       name: "John Doe",
+      email: "john@example.com",
+      equipmentId: null,
+      company: null,
     });
+    prismaMock.user.findMany.mockResolvedValue([]);
 
     const response = await POST(req as any);
 
@@ -83,7 +99,11 @@ describe("Contact API (POST)", () => {
     prismaMock.quoteRequest.create.mockResolvedValue({
       id: "lead-2",
       name: "Jane Doe",
+      email: "jane@example.com",
+      equipmentId: "prod-123",
+      company: null,
     });
+    prismaMock.user.findMany.mockResolvedValue([]);
 
     const response = await POST(req as any);
 

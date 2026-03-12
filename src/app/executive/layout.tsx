@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { BarChart3, TrendingUp, LogOut } from "lucide-react";
+import { NotificationsBell } from "@/components/dashboard/NotificationsBell";
 
 export default async function ExecutiveLayout({
   children,
@@ -16,9 +17,13 @@ export default async function ExecutiveLayout({
   }
 
   const userRole = session.user.role;
-  if (userRole !== "EXECUTIVE" && userRole !== "SUPER_ADMIN") {
-    // Se for apenas ADMIN, mandamos de volta pro /admin
-    redirect("/admin");
+  if (
+    userRole !== "EXECUTIVE" &&
+    userRole !== "ADMIN" &&
+    userRole !== "SUPER_ADMIN" &&
+    userRole !== "ANALYST"
+  ) {
+    redirect("/login");
   }
 
   return (
@@ -62,7 +67,10 @@ export default async function ExecutiveLayout({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-end px-6 shadow-sm z-10">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
+          <div className="flex items-center gap-3">
+            <NotificationsBell />
+          </div>
           <div className="flex items-center gap-3">
             <div className="text-right">
               <p className="text-sm font-bold text-slate-800">

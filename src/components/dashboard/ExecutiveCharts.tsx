@@ -25,12 +25,12 @@ import {
 } from "lucide-react";
 
 const COLORS = [
-  "#0056b3",
-  "#f59e0b",
-  "#10b981",
-  "#6366f1",
-  "#ec4899",
-  "#8b5cf6",
+  "#d4af37", // Gold
+  "#0a0a0a", // Charcoal
+  "#c0c0c0", // Silver
+  "#737373", // Muted
+  "#262626", // Light Charcoal
+  "#b8860b", // Dark Gold
 ];
 
 export function ExecutiveCharts({
@@ -53,32 +53,32 @@ export function ExecutiveCharts({
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between group hover:border-primary/20 transition-all">
+        <div className="glass-card p-6 flex flex-col justify-between group">
           <div className="flex justify-between items-start">
-            <p className="text-slate-500 font-medium tracking-tight">
+            <p className="text-text-muted font-black uppercase tracking-[0.2em] text-[10px]">
               Total de Oportunidades
             </p>
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:scale-110 transition-transform">
-              <Factory size={20} />
+            <div className="p-3 bg-zinc-100 text-primary rounded-xl group-hover:bg-primary group-hover:text-white transition-all duration-500">
+              <Factory size={22} />
             </div>
           </div>
-          <div className="mt-4 flex items-end justify-between">
-            <h3 className="text-4xl font-black text-slate-900 leading-none">
+          <div className="mt-6 flex items-end justify-between">
+            <h3 className="text-5xl font-black text-primary leading-none">
               {totalLeads}
             </h3>
             <span
-              className={`flex items-center text-sm font-bold px-2 py-1 rounded-md ${leadsGrowth >= 0 ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}
+              className={`flex items-center text-xs font-black px-3 py-1.5 rounded-lg ${leadsGrowth >= 0 ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}
             >
               {leadsGrowth >= 0 ? (
-                <ArrowUpRight size={14} className="mr-0.5" />
+                <ArrowUpRight size={14} className="mr-1" />
               ) : (
-                <ArrowDownRight size={14} className="mr-0.5" />
+                <ArrowDownRight size={14} className="mr-1" />
               )}
               {Math.abs(leadsGrowth)}%
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-widest">
-            Vs. Semana Passada
+          <p className="text-[10px] text-zinc-400 mt-4 uppercase font-bold tracking-widest">
+            Indicador de Crescimento Semanal
           </p>
         </div>
 
@@ -139,10 +139,10 @@ export function ExecutiveCharts({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Weekly Trend Area Chart */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <TrendingUp size={20} className="text-primary" />
-            Performance Semanal de Captação
+        <div className="glass-card p-8 group">
+          <h3 className="text-xl font-heading font-black text-primary mb-8 flex items-center gap-3">
+            <TrendingUp size={24} className="text-accent" />
+            Performance de Captação
           </h3>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -180,7 +180,7 @@ export function ExecutiveCharts({
                 <Area
                   type="monotone"
                   dataKey="leads"
-                  stroke="#0056b3"
+                  stroke="#d4af37"
                   strokeWidth={4}
                   fillOpacity={1}
                   fill="url(#colorLeads)"

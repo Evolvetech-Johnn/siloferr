@@ -15,9 +15,16 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Siloferr Peças Agrícolas | Excelência em Fabricação",
-  description: "Especializada em oferecer soluções para armazenamento, transporte e beneficiamento de produtos agrícolas.",
-  keywords: ["siloferr", "peças agrícolas", "acessórios agrícolas", "equipamentos agrícolas", "fabrica de silos"],
+  title: "Siloferr | Engenharia de Alta Performance em Armazenagem Agrícola",
+  description: "Líder em fabricação de silos e equipamentos para o agronegócio de elite. Tecnologia, precisão técnica e durabilidade sob medida para empresas de alta performance.",
+  keywords: ["siloferr", "silos industriais", "engenharia agrícola", "armazenagem de grãos", "peças agrícolas de elite", "fabricação de silos premium"],
+  openGraph: {
+    title: "Siloferr | Soluções Industriais Premium",
+    description: "Engenharia de elite para o agronegócio.",
+    images: ["https://siloferr.com.br/Content/img/logo-dark.png"],
+    locale: "pt_BR",
+    type: "website",
+  },
   icons: {
     icon: "https://siloferr.com.br/Content/img/favicon.png",
     apple: "https://siloferr.com.br/Content/img/apple-touch-icon.png",

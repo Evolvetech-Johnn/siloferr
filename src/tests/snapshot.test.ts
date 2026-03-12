@@ -45,11 +45,16 @@ describe('generateSnapshot', () => {
     }));
 
     // 2. openProposals (NO createdAt range, just status)
-    expect(prisma.quoteRequest.count).toHaveBeenNthCalledWith(2, expect.objectContaining({
-      where: {
-        status: { in: ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT"] }
-      }
-    }));
+    expect(prisma.quoteRequest.count).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        where: {
+          status: {
+            in: ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT", "NEGOTIATION"],
+          },
+        },
+      }),
+    );
 
     // 3. wonDeals (has updatedAt range)
     expect(prisma.quoteRequest.count).toHaveBeenNthCalledWith(3, expect.objectContaining({

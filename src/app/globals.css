@@ -1,20 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-primary: #0056b3;
-  --color-primary-light: #3385ff;
-  --color-primary-dark: #003d82;
-  --color-accent: #f59e0b;
-  --color-accent-hover: #d97706;
+  /* Colors - Luxury Industrial Palette */
+  --color-primary: #0a0a0a; /* Deep Charcoal */
+  --color-primary-light: #262626;
+  --color-primary-dark: #000000;
+  
+  --color-accent: #d4af37; /* Industrial Gold */
+  --color-accent-hover: #b8860b;
+  
+  --color-silver: #c0c0c0; /* Brushed Silver */
+  
   --color-whatsapp: #25d366;
   --color-whatsapp-hover: #128c7e;
 
   /* Neutrals */
-  --color-bg-base: #ffffff;
-  --color-bg-alt: #f3f4f6;
-  --color-text-main: #1f2937;
-  --color-text-muted: #6b7280;
+  --color-bg-base: #fafafa;
+  --color-bg-alt: #f0f0f0;
+  --color-text-main: #171717;
+  --color-text-muted: #737373;
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -46,17 +50,17 @@
     @apply py-20 md:py-28;
   }
 
-  /* Glassmorphism */
+  /* Glassmorphism 2.0 */
   .glass-effect {
-    @apply bg-white/90 backdrop-blur-md border border-white/50 shadow-lg;
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)];
   }
 
   .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-white/40 shadow-[0_10px_30px_rgba(0,0,0,0.08)] rounded-2xl transition-all duration-300;
+    @apply bg-white/60 backdrop-blur-md border border-white/30 shadow-[0_20px_50px_rgba(0,0,0,0.04)] rounded-3xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)];
   }
 
   .glass-card:hover {
-    @apply shadow-[0_15px_40px_rgba(0,86,179,0.15)] -translate-y-1;
+    @apply shadow-[0_40px_80px_rgba(212,175,55,0.12)] -translate-y-2 border-accent/20;
   }
 
   /* Buttons */
@@ -65,11 +69,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-heading font-semibold transition-all duration-300 gap-2 text-base bg-primary text-white shadow-[0_4px_15px_rgba(0,86,179,0.3)];
-  }
-
-  .btn-primary:hover {
-    @apply bg-primary-dark shadow-[0_6px_20px_rgba(0,86,179,0.4)] -translate-y-0.5;
+    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-heading font-bold transition-all duration-500 gap-3 text-base bg-primary text-white shadow-[0_10px_20px_rgba(0,0,0,0.2)] hover:bg-zinc-800 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)];
   }
 
   .btn-accent {

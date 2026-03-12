@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import type { Role } from "@/lib/rbac";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,7 +12,8 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Senha", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        void req;
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Credenciais inválidas");
         }
@@ -37,7 +39,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role,
+          role: user.role as Role,
         };
       },
     }),
@@ -58,6 +60,39 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  events: {
+    async signIn({ user }) {
+      const userId = (user as { id?: string }).id;
+      if (!userId) return;
+
+      await prisma.auditLog
+        .create({
+          data: {
+            userId,
+            action: "auth.login",
+            entity: "User",
+            entityId: userId,
+            metadata: { email: user.email },
+          },
+        })
+        .catch(() => null);
+    },
+    async signOut({ token }) {
+      const userId = (token as { id?: string } | undefined)?.id;
+      if (!userId) return;
+
+      await prisma.auditLog
+        .create({
+          data: {
+            userId,
+            action: "auth.logout",
+            entity: "User",
+            entityId: userId,
+          },
+        })
+        .catch(() => null);
+    },
+  },
   pages: {
     signIn: "/login",
   },
@@ -70,4 +105,3 @@ export const authOptions: NextAuthOptions = {
 if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_SECRET) {
   throw new Error("❌ NEXTAUTH_SECRET não definido em ambiente de produção!");
 }
-

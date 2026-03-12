@@ -23,14 +23,14 @@ export async function generateSnapshot(targetDate?: Date) {
       },
     });
 
-    // 2. Open proposals (status NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT)
+    // 2. Open proposals (status NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT, NEGOTIATION)
     // This represents the current size of the active pipeline.
     // Note: Since we don't have historical status logs, this snapshot records
     // the TOTAL number of open proposals at the time of execution.
     const openProposals = await prisma.quoteRequest.count({
       where: {
         status: {
-          in: ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT"],
+          in: ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT", "NEGOTIATION"],
         },
         // Removed createdAt constraint to capture the full active pipeline
       },
